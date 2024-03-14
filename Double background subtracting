@@ -1,0 +1,13 @@
+The algorithm we have used here to perform the double background-subtracting of the spectra of the AGN in NGC 1275 includes the following consequence of steps: 
+
+1. Regular reduction of the observational data to collect the remote background, cluster, and AGN+cluster spectral counts;
+2. Creating and rebinning of the remote background, cluster, and AGN+cluster spectral;
+3. Extraction of the remote background from the cluster spectrum using our python script back_corr.py, applying the following console command to launch it:
+    python3 back_corr.py -c clus_raw.pha -b back.pha -c 1.0 clus_clean.pha
+    here clus_raw.pha is an input uncleaned cluster spectrum, back.pha is a remote background spectrum, 1.0 in our case is the relation between the spaces of the cluster and background regions $S_{cluster}/S_{bkg}$, and clus_clean.pha is an output file;
+4. Use the resulting AGN+cluster spectrum with the cleaned cluster spectrum as a correction file XSPEC:
+     da source.grp
+     corfile clus_clean.pha
+     cornorm 1.5
+5. Set the "cornorm" coefficient to the value obtained from the relations between the amplitudes of the emission lines from AGN+cluster and cluster regions;
+6. Add the systematic errors to the resulting spectra. As we have subtracted the remote background from the cluster spectrum, the additional errors are equivalent to the cluster + remote background errors. Depending on the observation, in our case, it's on the level of 0.07-0.2.
